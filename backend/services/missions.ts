@@ -21,3 +21,5 @@ export async function submitApplication(jobId:string,name:string,note:string,cv:
  const {data:{user}}=await supabase.auth.getUser();if(!user)throw new Error('Sign in required');
  const {error}=await supabase.from('applications').insert({mission_id:jobId,student_id:user.id,student_name:name,cover_note:note,cv_attached:cv});if(error)throw error;
 }
+
+export async function transitionApplication(id:string,action:string){const {error}=await supabase.rpc('transition_application',{p_id:id,p_action:action});if(error)throw error;}
