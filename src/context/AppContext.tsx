@@ -179,7 +179,9 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
       setAuthenticated(true);setAccountRole(p.role);
       if(p.role==='student') setAllStudents([{id:p.id,userId:p.id,fullName:p.full_name,email:p.email,phone:p.phone||'',avatar:p.avatar_url||'',dob:p.dob||'',university:p.university||'',fieldOfStudy:p.study_field||'',academicLevel:p.academic_level||'Autre',city:p.city||'Sousse',bio:p.bio||'',skills:p.skills||[],languages:p.languages||[],experiences:p.experiences||[],certificates:p.certificates||[],availabilitySlots:p.availability_slots||[],preferredCategories:p.preferred_categories||[],portfolioUrl:p.portfolio_url||undefined,rating:Number(p.rating||0),reviewCount:p.reviews_count||0,completedMissionsCount:0,totalEarnings:Number(p.available_balance||0),isVerified:!!p.is_verified_student,cvUrl:p.cv_url||undefined}]);
       if(p.role==='employer') setAllEmployers([{id:p.id,userId:p.id,companyName:p.company_name||p.full_name,logo:p.company_logo_url||'',industry:p.industry||'',registrationNumber:p.registration_number||'',description:p.description||'',website:p.website||'',address:p.address||'',city:p.city||'Sousse',verificationStatus:'unverified',contactPerson:p.full_name,contactEmail:p.email,contactPhone:p.phone||'',rating:Number(p.rating||0),reviewCount:p.reviews_count||0,jobsPostedCount:0,completedMissionsCount:0,totalSpent:0}]);
-      setJobs([]);setApplications([]);setReviews([]);setNotifications([]);setMessages([]);setBookmarkedJobIds([]);
+      // Jobs are public data: preserve the list across sign-in and role changes.
+      // Only user-specific state must be cleared here.
+      setApplications([]);setReviews([]);setNotifications([]);setMessages([]);setBookmarkedJobIds([]);
       if(p.role==='student') {const {data:b}=await supabase.from('bookmarks').select('mission_id').eq('student_id',p.id);if(!active||id!==generation)return;setBookmarkedJobIds((b||[]).map(x=>x.mission_id));}
       setRoleState(p.role);setActiveTab(p.role==='admin'?'metrics':'dashboard');
     }
@@ -191,7 +193,30 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
     return ()=>{active=false;subscription.unsubscribe()};
   }, []);
 
-  useEffect(()=>{if(!demoMode){let alive=true;const refresh=()=>{void loadMissions().then(v=>{if(alive)setJobs(v)}).catch(console.error);if(authenticated)void loadApplications().then(v=>{if(alive)setApplications(v)}).catch(console.error);};refresh();const timer=setInterval(refresh,5000);return()=>{alive=false;clearInterval(timer)};}},[authenticated,demoMode]);
+  useEffect(() => {
+    if (demoMode) return;
+    let alive = true;
+    const refresh = () => {
+      void loadMissions().then(items => { if (alive) setJobs(items); }).catch(console.error);
+      if (!authenticated) return;
+      void loadApplications().then(items => { if (alive) setApplications(items); }).catch(console.error);
+      // Notifications are private per user (database RLS), not generated client-side.
+      void supabase.from('notifications')
+        .select('id,user_id,title,message,type,link_target,is_read,created_at')
+        .order('created_at', { ascending: false }).limit(30)
+        .then(({data,error}) => {
+          if (!alive || error) return; // Keep the site usable before migration is deployed.
+          setNotifications((data || []).map(n => ({
+            id: n.id, userId: n.user_id, title: n.title, message: n.message,
+            type: n.type as Notification['type'], linkTarget: n.link_target || undefined,
+            isRead: !!n.is_read, createdAt: n.created_at
+          })));
+        });
+    };
+    refresh();
+    const timer = setInterval(refresh, 30000);
+    return () => { alive = false; clearInterval(timer); };
+  }, [authenticated,demoMode]);
   // Active user reference
   const currentStudent = allStudents[0] || EMPTY_STUDENT;
   const currentEmployer = allEmployers[0] || EMPTY_EMPLOYER;
@@ -546,11 +571,23 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
   };
 
   const markNotificationAsRead = (id: string) => {
-    setNotifications(prev => prev.map(n => n.id === id ? { ...n, isRead: true } : n));
+    if (!authenticated) return;
+    void supabase.from('notifications').update({ is_read: true }).eq('id', id)
+      .then(({ error }) => {
+        if (error) { console.error('Mark notification read failed:', error.message); return; }
+        setNotifications(prev => prev.map(n => n.id === id ? { ...n, isRead: true } : n));
+      });
   };
 
   const markAllNotificationsAsRead = () => {
-    setNotifications(prev => prev.map(n => ({ ...n, isRead: true })));
+    if (!authenticated) return;
+    const ids = notifications.filter(n => !n.isRead).map(n => n.id);
+    if (!ids.length) return;
+    void supabase.from('notifications').update({ is_read: true }).in('id', ids)
+      .then(({ error }) => {
+        if (error) { console.error('Mark notifications read failed:', error.message); return; }
+        setNotifications(prev => prev.map(n => ({ ...n, isRead: true })));
+      });
   };
 
   const verifyEmployer = (employerId: string) => {

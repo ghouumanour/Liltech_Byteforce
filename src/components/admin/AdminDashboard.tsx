@@ -71,7 +71,8 @@ export const AdminDashboard: React.FC = () => {
       return sum + (job ? job.totalPayment : 50);
     }, 0);
 
-  const platformCommissionRevenue = Math.round((totalCompletedEarnings + 1200) * 0.05);
+  // No real payment collection is implemented; don't fabricate commission revenue.
+  const platformCommissionRevenue = 0;
   const pendingEmployers = allEmployers.filter(e => e.verificationStatus === 'pending');
 
   return (

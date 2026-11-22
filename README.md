@@ -58,15 +58,23 @@ Scan the QR code with Expo Go. Use the same Wi-Fi or `--tunnel` if needed.
 - Requests are shared across clients through the getboth_membership RPC, with a client-side 1850 ms deadline per membership request. A timeout is not a guarantee that a write did not happen; refresh status before retrying. Only the requesting user can read their row; only employers can insert their own pending request. Approval is a trusted administrative operation. Do not expose service-role keys.
 - Validate by submitting a request as a test employer, refreshing both clients, and checking that another account cannot read it or approve it.
 
+## Notifications
+- Apply `backend/migrations/notifications.sql` in the same Supabase project using an authorized database administrator.
+- RLS restricts notification reads and read-status updates to the signed-in user. Public clients cannot insert notifications.
+- Database triggers create notifications when a student applies or an application status changes.
+- The Web UI fetches notifications every 30 seconds and stores read state in Supabase. Before this migration is applied, it displays an empty notification list instead of pretending to deliver messages.
+
 ## Checks
 ```powershell
+node scripts/smoke-test.mjs
 npm.cmd run build
 cd mobile
 npx.cmd tsc --noEmit
 ```
+The smoke test checks public API availability and verifies anonymous access is denied for Membership. It does not replace authenticated end-to-end tests or guarantee latency under two seconds.
 
 ## Status
-Web: integration preview; payments simulated. Mobile: interactive demo with connected membership screen. Membership migration must be applied and tested before deploying. No actual payment or subscription activation is included.
+Web: live Supabase integration for core mission flows; authenticated end-to-end tests are still required. Mobile: interactive demo with a connected membership screen. The membership RPC is present, but the employer request flow has not been validated with an authenticated test account. Notifications require applying `backend/migrations/notifications.sql`. Reviews, direct messaging, and some admin controls are not yet connected to the live backend. No real payments or subscription activation are included.
 
 ## Security
 Never commit local .env files, private credentials or service-role keys. The public client configuration in this README and the example files is intentional. Only public/publishable client keys belong in frontend configuration. Keep Row Level Security enabled.

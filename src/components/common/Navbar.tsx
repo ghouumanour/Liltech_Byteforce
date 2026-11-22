@@ -27,6 +27,7 @@ export const Navbar: React.FC = () => {
     student,
     employer,
     notifications,
+    markNotificationAsRead,
     bookmarkedJobIds,
     setIsAuthModalOpen,
     setAuthModalMode,
@@ -335,6 +336,7 @@ export const Navbar: React.FC = () => {
                           <div
                             key={n.id}
                             onClick={() => {
+                              markNotificationAsRead(n.id);
                               if (n.linkTarget) handleNavClick(n.linkTarget);
                               setIsNotifDropdownOpen(false);
                             }}
@@ -344,7 +346,7 @@ export const Navbar: React.FC = () => {
                           >
                             <div className="flex items-start justify-between gap-1">
                               <span className="text-xs font-bold text-navy">{n.title}</span>
-                              <span className="text-[10px] text-slate-400">Just now</span>
+                              <span className="text-[10px] text-slate-400">{new Date(n.createdAt).toLocaleDateString()}</span>
                             </div>
                             <p className="text-xs text-slate-600 mt-1 line-clamp-2">{n.message}</p>
                           </div>
