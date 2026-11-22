@@ -27,16 +27,17 @@ import { EmployerCompanyProfile } from './components/employer/EmployerCompanyPro
 import { AdminDashboard } from './components/admin/AdminDashboard';
 
 const MainAppContent: React.FC = () => {
-  const { role, activeTab } = useApp();
+  const { role, activeTab, demoMode, authenticated } = useApp();
 
   return (
     <div className="min-h-screen flex flex-col bg-[#FAFBFD] text-slate-800">
       
       {/* Interactive Switcher Bar for instant evaluator testing */}
-      <RoleSwitcherBar />
+      {demoMode && <RoleSwitcherBar />}
 
       {/* Main Glass Navbar */}
       <Navbar />
+      {authenticated && <div className="bg-slate-100 border-b border-slate-200 text-center text-xs py-2">Authenticated account. Mission management is in integration preview; transactions are simulated.</div>}
 
       {/* Main Layout Area */}
       {role === 'guest' ? (

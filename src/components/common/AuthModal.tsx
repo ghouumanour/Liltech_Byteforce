@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { useApp } from '../../context/AppContext';
 import { X, Lock, Mail, User, Building, MapPin, CheckCircle, ArrowRight, Sparkles } from 'lucide-react';
-import { UserRole } from '../../types';
+import { supabase } from '../../lib/supabase';
 
 export const AuthModal: React.FC = () => {
   const {
@@ -22,39 +22,36 @@ export const AuthModal: React.FC = () => {
     university: 'INSAT',
     companyName: '',
     industry: 'Event & Marketing',
-    city: 'Tunis',
+    city: 'Sousse',
     phone: '+216 '
   });
   const [resetSent, setResetSent] = useState(false);
   const [notice, setNotice] = useState<string | null>(null);
+  const [error, setError] = useState('');
+  const [busy, setBusy] = useState(false);
 
   if (!isAuthModalOpen) return null;
 
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    if (authModalMode === 'forgot') {
-      setResetSent(true);
-      return;
-    }
-
-    if (authModalMode === 'signup') {
-      setRole(signupRole);
-      setNotice(`Welcome to GetBoth as a ${signupRole}! Your account is created.`);
-    } else {
-      // Login
-      setRole(signupRole);
-      setNotice(`Logged in successfully!`);
-    }
-
-    setTimeout(() => {
-      setNotice(null);
-      setIsAuthModalOpen(false);
-    }, 1000);
-  };
-
-  const handleQuickLogin = (asRole: UserRole) => {
-    setRole(asRole);
-    setIsAuthModalOpen(false);
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault(); setBusy(true); setError(''); setNotice(null); setResetSent(false);
+    try {
+      if (authModalMode === 'forgot') {
+        const { error } = await supabase.auth.resetPasswordForEmail(formData.email.trim(), { redirectTo: window.location.origin });
+        if (error) throw error;
+        setResetSent(true);
+      } else if (authModalMode === 'signup') {
+        const { data, error } = await supabase.auth.signUp({email:formData.email.trim(),password:formData.password, options:{emailRedirectTo:window.location.origin,data:{role:signupRole,full_name:signupRole==='student'?formData.name:formData.companyName,company_name:signupRole==='employer'?formData.companyName:null,university:signupRole==='student'?formData.university:null,city:formData.city}}});
+        if (error) throw error;
+        setNotice(data.session?'Account created.':'Check your email to confirm your account, then sign in.');
+        if(data.session) setIsAuthModalOpen(false);
+      } else {
+        const { error } = await supabase.auth.signInWithPassword({email:formData.email.trim(),password:formData.password});
+        if(error) throw error;
+        setIsAuthModalOpen(false);
+      }
+      setFormData(v=>({...v,password:''}));
+    } catch(e) { setError(e instanceof Error?e.message:'Authentication failed. Please try again.'); }
+    finally { setBusy(false); }
   };
 
   return (
@@ -88,6 +85,7 @@ export const AuthModal: React.FC = () => {
             </p>
           </div>
 
+          {error && <p role="alert" className="mb-4 p-3 border border-tunisian text-tunisian text-sm">{error}</p>}
           {notice && (
             <div className="mb-4 p-3 bg-emerald-50 border border-emerald-200 text-emerald-800 rounded-xl text-xs flex items-center gap-2 animate-fade-in">
               <CheckCircle className="w-4 h-4 text-emerald-600 shrink-0" />
@@ -95,34 +93,8 @@ export const AuthModal: React.FC = () => {
             </div>
           )}
 
-          {/* Quick Demo Logins for instant evaluation */}
-          <div className="mb-5 p-3.5 bg-blush/40 rounded-2xl border border-blush-300">
-            <div className="flex items-center gap-1.5 text-xs font-bold text-navy mb-2 font-display">
-              <Sparkles className="w-3.5 h-3.5 text-tunisian" />
-              <span>1-Click Demo Evaluation Credentials:</span>
-            </div>
-            <div className="grid grid-cols-2 gap-2 text-xs">
-              <button
-                type="button"
-                onClick={() => handleQuickLogin('student')}
-                className="h-10 px-3 rounded-xl bg-white hover:bg-slate-50 border border-slate-200 font-semibold text-steel text-left flex items-center justify-between transition-colors btn-press"
-              >
-                <span className="truncate">Student ({student.fullName.split(' ')[0]})</span>
-                <ArrowRight className="w-3.5 h-3.5 text-fresh shrink-0 ml-1" />
-              </button>
-              <button
-                type="button"
-                onClick={() => handleQuickLogin('employer')}
-                className="h-10 px-3 rounded-xl bg-white hover:bg-slate-50 border border-slate-200 font-semibold text-steel text-left flex items-center justify-between transition-colors btn-press"
-              >
-                <span className="truncate">Employer ({employer.companyName.split(' ')[0]})</span>
-                <ArrowRight className="w-3.5 h-3.5 text-tunisian shrink-0 ml-1" />
-              </button>
-            </div>
-          </div>
-
           {/* Role selection tab during Sign Up or Login */}
-          {authModalMode !== 'forgot' && (
+          {authModalMode === 'signup' && (
             <div className="flex p-1 bg-slate-100 rounded-xl mb-4">
               <button
                 type="button"
@@ -198,6 +170,8 @@ export const AuthModal: React.FC = () => {
                 <div className="relative">
                   <input
                     type="password"
+                    minLength={authModalMode === 'signup' ? 8 : undefined}
+                    autoComplete={authModalMode === 'signup' ? 'new-password' : 'current-password'}
                     required
                     placeholder="••••••••"
                     value={formData.password}
@@ -251,6 +225,7 @@ export const AuthModal: React.FC = () => {
 
             <button
               type="submit"
+              disabled={busy}
               className="w-full h-12 rounded-xl bg-navy hover:bg-navy-600 text-white font-bold text-xs sm:text-sm shadow-md transition-all duration-200 hover:scale-[1.01] flex items-center justify-center gap-2 btn-press"
             >
               <span>

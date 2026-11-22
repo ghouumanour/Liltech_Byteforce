@@ -461,7 +461,7 @@ export const Navbar: React.FC = () => {
                         className="w-full text-left px-3 py-2 text-xs font-medium text-tunisian hover:bg-tunisian-50 rounded-lg flex items-center gap-2 mt-1"
                       >
                         <LogOut className="w-3.5 h-3.5" />
-                        <span>Sign Out (Switch to Guest)</span>
+                        <span>Sign Out</span>
                       </button>
                     </div>
                   </div>

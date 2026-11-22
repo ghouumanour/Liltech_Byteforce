@@ -32,14 +32,14 @@ export const ApplyModal: React.FC = () => {
 
   const job = selectedJobForApply;
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!confirmedSchedule) {
       alert('Please confirm your availability for this date and time.');
       return;
     }
 
-    const success = applyToJob(job.id, coverNote, attachCv);
+    const success = await applyToJob(job.id, coverNote, attachCv);
     if (success) {
       setIsSubmitted(true);
       setTimeout(() => {

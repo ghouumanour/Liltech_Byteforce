@@ -1,4 +1,6 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
+import { supabase } from '../lib/supabase';
+import { loadMissions,loadApplications,publishMission,submitApplication } from '../../backend/services/missions';
 import {
   UserRole,
   StudentProfile,
@@ -23,6 +25,8 @@ import {
 
 interface AppContextType {
   role: UserRole;
+  authenticated: boolean;
+  demoMode: boolean;
   setRole: (role: UserRole) => void;
   activeTab: string;
   setActiveTab: (tab: string) => void;
@@ -72,11 +76,11 @@ interface AppContextType {
   
   // Actions
   toggleBookmark: (jobId: string) => void;
-  applyToJob: (jobId: string, coverNote: string, cvAttached: boolean) => boolean;
+  applyToJob: (jobId: string, coverNote: string, cvAttached: boolean) => Promise<boolean>;
   updateApplicationStatus: (appId: string, status: ApplicationStatus) => void;
   checkInMission: (appId: string) => void;
   completeMissionAndPayout: (appId: string) => void;
-  createJob: (jobData: Omit<JobMission, 'id' | 'createdAt' | 'filledPositions' | 'status'>) => void;
+  createJob: (jobData: Omit<JobMission, 'id' | 'createdAt' | 'filledPositions' | 'status'>) => Promise<boolean>;
   updateStudentProfile: (updated: Partial<StudentProfile>) => void;
   updateEmployerProfile: (updated: Partial<EmployerProfile>) => void;
   sendMessage: (recipientId: string, content: string, jobId?: string, jobTitle?: string) => void;
@@ -103,10 +107,10 @@ const initialFilter: JobFilter = {
 export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   // Try loading from localStorage or default
   const [role, setRoleState] = useState<UserRole>(() => {
-    return (localStorage.getItem('getboth_role') as UserRole) || 'student';
+    return 'guest';
   });
 
-  const [activeTab, setActiveTab] = useState<string>('dashboard');
+  const [activeTab, setActiveTab] = useState<string>('explore');
 
   const [allStudents, setAllStudents] = useState<StudentProfile[]>(() => {
     const saved = localStorage.getItem('getboth_students');
@@ -163,48 +167,80 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
   const [isReviewModalOpen, setIsReviewModalOpen] = useState(false);
   const [reviewTarget, setReviewTarget] = useState<{ jobId: string; jobTitle: string; toUserId: string; toUserName: string; toRole: 'student' | 'employer' } | null>(null);
 
+  const [authenticated, setAuthenticated] = useState(false);
+  const [accountRole, setAccountRole] = useState<UserRole>('guest');
+  const demoMode = import.meta.env.VITE_DEMO_MODE === 'true' && !authenticated;
+  useEffect(() => {
+    let active = true;
+    let generation = 0;
+    async function synchronize(userId: string | undefined) {
+      const id = ++generation;
+      if (!userId) { if(active){setAuthenticated(false);setAccountRole('guest');setRoleState('guest');setActiveTab('explore');} return; }
+      const {data:p,error} = await supabase.from('profiles').select('*').eq('id',userId).single();
+      if (!active || id!==generation) return;
+      if (error || !p || !['student','employer','admin'].includes(p.role)) {setAuthenticated(false);setRoleState('guest');setActiveTab('explore');return;}
+      setAuthenticated(true);setAccountRole(p.role);
+      if(p.role==='student') setAllStudents([{id:p.id,userId:p.id,fullName:p.full_name,email:p.email,phone:p.phone||'',avatar:p.avatar_url||'',dob:'',university:p.university||'',fieldOfStudy:p.study_field||'',academicLevel:'Autre',city:p.city||'Sousse',bio:'',skills:p.skills||[],languages:[],experiences:[],certificates:[],availabilitySlots:[],preferredCategories:[],rating:Number(p.rating||0),reviewCount:p.reviews_count||0,completedMissionsCount:0,totalEarnings:Number(p.available_balance||0),isVerified:!!p.is_verified_student,cvUrl:p.cv_url||undefined}]);
+      if(p.role==='employer') setAllEmployers([{id:p.id,userId:p.id,companyName:p.company_name||p.full_name,logo:p.company_logo_url||'',industry:'',registrationNumber:'',description:'',website:'',address:'',city:p.city||'Sousse',verificationStatus:'unverified',contactPerson:p.full_name,contactEmail:p.email,contactPhone:p.phone||'',rating:Number(p.rating||0),reviewCount:p.reviews_count||0,jobsPostedCount:0,completedMissionsCount:0,totalSpent:0}]);
+      setJobs([]);setApplications([]);setReviews([]);setNotifications([]);setMessages([]);setBookmarkedJobIds([]);
+      setRoleState(p.role);setActiveTab(p.role==='admin'?'metrics':'dashboard');
+    }
+    const {data:{subscription}}=supabase.auth.onAuthStateChange((event,session)=>{
+      if(event==='TOKEN_REFRESHED')return;
+      if(event==='PASSWORD_RECOVERY'){ return; }
+      setTimeout(()=>{if(active)void synchronize(session?.user.id)},0);
+    });
+    return ()=>{active=false;subscription.unsubscribe()};
+  }, []);
+
+  useEffect(()=>{if(!demoMode){let alive=true;const refresh=()=>{void loadMissions().then(v=>{if(alive)setJobs(v)}).catch(console.error);if(authenticated)void loadApplications().then(v=>{if(alive)setApplications(v)}).catch(console.error);};refresh();const timer=setInterval(refresh,5000);return()=>{alive=false;clearInterval(timer)};}},[authenticated,demoMode]);
   // Active user reference
   const currentStudent = allStudents[0];
   const currentEmployer = allEmployers[0];
 
   // Save to localStorage when state updates
   useEffect(() => {
-    localStorage.setItem('getboth_role', role);
+    if(import.meta.env.VITE_DEMO_MODE === 'true' && !authenticated) localStorage.setItem('getboth_role', role);
   }, [role]);
 
   useEffect(() => {
-    localStorage.setItem('getboth_jobs', JSON.stringify(jobs));
+    if(import.meta.env.VITE_DEMO_MODE === 'true' && !authenticated) localStorage.setItem('getboth_jobs', JSON.stringify(jobs));
   }, [jobs]);
 
   useEffect(() => {
-    localStorage.setItem('getboth_applications', JSON.stringify(applications));
+    if(import.meta.env.VITE_DEMO_MODE === 'true' && !authenticated) localStorage.setItem('getboth_applications', JSON.stringify(applications));
   }, [applications]);
 
   useEffect(() => {
-    localStorage.setItem('getboth_students', JSON.stringify(allStudents));
+    if(import.meta.env.VITE_DEMO_MODE === 'true' && !authenticated) localStorage.setItem('getboth_students', JSON.stringify(allStudents));
   }, [allStudents]);
 
   useEffect(() => {
-    localStorage.setItem('getboth_employers', JSON.stringify(allEmployers));
+    if(import.meta.env.VITE_DEMO_MODE === 'true' && !authenticated) localStorage.setItem('getboth_employers', JSON.stringify(allEmployers));
   }, [allEmployers]);
 
   useEffect(() => {
-    localStorage.setItem('getboth_notifications', JSON.stringify(notifications));
+    if(import.meta.env.VITE_DEMO_MODE === 'true' && !authenticated) localStorage.setItem('getboth_notifications', JSON.stringify(notifications));
   }, [notifications]);
 
   useEffect(() => {
-    localStorage.setItem('getboth_messages', JSON.stringify(messages));
+    if(import.meta.env.VITE_DEMO_MODE === 'true' && !authenticated) localStorage.setItem('getboth_messages', JSON.stringify(messages));
   }, [messages]);
 
   useEffect(() => {
-    localStorage.setItem('getboth_reviews', JSON.stringify(reviews));
+    if(import.meta.env.VITE_DEMO_MODE === 'true' && !authenticated) localStorage.setItem('getboth_reviews', JSON.stringify(reviews));
   }, [reviews]);
 
   useEffect(() => {
-    localStorage.setItem('getboth_bookmarks', JSON.stringify(bookmarkedJobIds));
+    if(import.meta.env.VITE_DEMO_MODE === 'true' && !authenticated) localStorage.setItem('getboth_bookmarks', JSON.stringify(bookmarkedJobIds));
   }, [bookmarkedJobIds]);
 
   const setRole = (newRole: UserRole) => {
+    if (!demoMode) {
+      if (newRole === 'guest') { void supabase.auth.signOut(); setAuthenticated(false);setAccountRole('guest');setRoleState('guest');setActiveTab('explore');return; }
+      if (!authenticated) { setAuthModalMode('login');setIsAuthModalOpen(true);return; }
+      if (newRole !== accountRole) return;
+    }
     setRoleState(newRole);
     // Sensible default tab when switching role
     if (newRole === 'student') setActiveTab('dashboard');
@@ -223,7 +259,8 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
     );
   };
 
-  const applyToJob = (jobId: string, coverNote: string, cvAttached: boolean): boolean => {
+  const applyToJob = async (jobId: string, coverNote: string, cvAttached: boolean): Promise<boolean> => {
+    if(!demoMode){if(!authenticated||role!=='student')return false;try{await submitApplication(jobId,currentStudent.fullName,coverNote,cvAttached);setApplications(await loadApplications());return true;}catch(e){alert(e instanceof Error?e.message:String((e as any)?.message||e));return false;}}
     const job = jobs.find(j => j.id === jobId);
     if (!job) return false;
 
@@ -372,7 +409,8 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
     setNotifications(prev => [payoutNotif, ...prev]);
   };
 
-  const createJob = (jobData: Omit<JobMission, 'id' | 'createdAt' | 'filledPositions' | 'status'>) => {
+  const createJob = async (jobData: Omit<JobMission, 'id' | 'createdAt' | 'filledPositions' | 'status'>):Promise<boolean> => {
+    if(!demoMode){if(!authenticated||role!=='employer')return false;try{await publishMission(jobData);setJobs(await loadMissions());return true;}catch(e){alert(e instanceof Error?e.message:String((e as any)?.message||e));return false;}}
     const newJob: JobMission = {
       ...jobData,
       id: `job-${Date.now()}`,
@@ -408,6 +446,7 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
       createdAt: new Date().toISOString()
     };
     setNotifications(prev => [broadcastNotif, ...prev]);
+    return true;
   };
 
   const updateStudentProfile = (updated: Partial<StudentProfile>) => {
@@ -515,6 +554,8 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
     <AppContext.Provider
       value={{
         role,
+        authenticated,
+        demoMode,
         setRole,
         activeTab,
         setActiveTab,

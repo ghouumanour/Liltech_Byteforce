@@ -66,7 +66,7 @@ export const PostJobModal: React.FC = () => {
     setResponsibilities(responsibilities.filter((_, i) => i !== index));
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!title.trim() || !address.trim() || !description.trim()) {
       alert('Please fill out all required mission fields.');
@@ -75,7 +75,7 @@ export const PostJobModal: React.FC = () => {
 
     const skills = skillsString.split(',').map(s => s.trim()).filter(Boolean);
 
-    createJob({
+    const success = await createJob({
       employerId: employer.id,
       companyName: employer.companyName,
       companyLogo: employer.logo,
@@ -106,6 +106,7 @@ export const PostJobModal: React.FC = () => {
       transportProvided
     });
 
+    if(!success)return;
     setIsSuccess(true);
     setTimeout(() => {
       setIsSuccess(false);

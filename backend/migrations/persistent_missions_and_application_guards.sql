@@ -1,0 +1,15 @@
+alter table public.missions add column if not exists category text not null default 'Other', add column if not exists company_name text not null default 'Local business', add column if not exists responsibilities text[] not null default '{}', add column if not exists requirements text[] not null default '{}', add column if not exists attire text, add column if not exists meal_provided boolean default false, add column if not exists transport_provided boolean default false;
+alter table public.applications add column if not exists cover_note text not null default '', add column if not exists cv_attached boolean not null default false, add column if not exists student_name text not null default 'Student';
+alter table public.missions add constraint valid_mission_values check(end_time>start_time and hourly_rate>0 and spots_total>0 and spots_open between 0 and spots_total and abs(duration_hours-extract(epoch from (end_time-start_time))/3600)<0.01 and abs(total_payout-hourly_rate*duration_hours)<0.01);
+drop policy "Employeurs créent des missions" on public.missions;
+create policy employer_publish on public.missions for insert to authenticated with check(employer_id=(select auth.uid()) and exists(select 1 from public.profiles p where p.id=(select auth.uid()) and p.role='employer' and company_name=coalesce(p.company_name,p.full_name)) and status='open' and spots_total=spots_open);
+revoke update,delete on public.missions from public,anon,authenticated;
+revoke insert on public.missions from public,anon;
+drop policy "Étudiants postulent" on public.applications;
+create policy student_apply on public.applications for insert to authenticated with check(student_id=(select auth.uid()) and exists(select 1 from public.profiles p where p.id=(select auth.uid()) and p.role='student' and p.full_name=student_name) and exists(select 1 from public.missions m where m.id=mission_id and m.status='open' and m.spots_open>0 and m.mission_date>= (now() at time zone 'Africa/Tunis')::date));
+revoke insert,update,delete on public.applications from public,anon,authenticated;
+grant insert(mission_id,student_id,cover_note,cv_attached,student_name) on public.applications to authenticated;
+revoke insert,update,delete on public.transactions from public,anon,authenticated;
+create index if not exists missions_employer_idx on public.missions(employer_id);
+create index if not exists applications_student_idx on public.applications(student_id);
+create index if not exists missions_discovery_idx on public.missions(status,mission_date,city);
