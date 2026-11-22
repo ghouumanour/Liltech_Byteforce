@@ -1,4 +1,5 @@
 import React from 'react';
+import { Membership } from './components/common/Membership';
 import { AppProvider, useApp } from './context/AppContext';
 import { RoleSwitcherBar } from './components/common/RoleSwitcherBar';
 import { Navbar } from './components/common/Navbar';
@@ -28,6 +29,7 @@ import { AdminDashboard } from './components/admin/AdminDashboard';
 
 const MainAppContent: React.FC = () => {
   const { role, activeTab, demoMode, authenticated } = useApp();
+  const [membershipOpen,setMembershipOpen]=React.useState(false);
 
   return (
     <div className="min-h-screen flex flex-col bg-[#FAFBFD] text-slate-800">
@@ -37,6 +39,8 @@ const MainAppContent: React.FC = () => {
 
       {/* Main Glass Navbar */}
       <Navbar />
+      <div className="bg-white border-b px-4 py-2 text-right"><button className="text-sm font-bold text-navy" onClick={()=>setMembershipOpen(v=>!v)}>{membershipOpen?'Close membership':'Membership'}</button></div>
+      {membershipOpen && <Membership />}
       {authenticated && <div className="bg-slate-100 border-b border-slate-200 text-center text-xs py-2">Authenticated account. Mission management is in integration preview; transactions are simulated.</div>}
 
       {/* Main Layout Area */}
