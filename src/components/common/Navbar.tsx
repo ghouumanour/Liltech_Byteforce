@@ -27,7 +27,6 @@ export const Navbar: React.FC = () => {
     student,
     employer,
     notifications,
-    messages,
     bookmarkedJobIds,
     setIsAuthModalOpen,
     setAuthModalMode,
@@ -40,7 +39,6 @@ export const Navbar: React.FC = () => {
   const [isNotifDropdownOpen, setIsNotifDropdownOpen] = useState(false);
 
   const unreadNotifications = notifications.filter(n => !n.isRead);
-  const unreadMessages = messages.filter(m => !m.isRead && m.recipientId === (role === 'student' ? student.id : employer.id));
 
   const handleNavClick = (tabId: string) => {
     setActiveTab(tabId);
@@ -167,6 +165,7 @@ export const Navbar: React.FC = () => {
                   <Briefcase className="w-4 h-4 text-fresh" />
                   <span>Applicants</span>
                 </button>
+                <button onClick={() => handleNavClick('membership')} className={`px-3 py-2 rounded-xl text-sm font-semibold ${activeTab === 'membership' ? 'bg-navy text-white' : 'text-steel hover:bg-slate-100'}`}>Membership</button>
                 <button
                   onClick={() => handleNavClick('company-profile')}
                   className={`px-3.5 py-2 rounded-lg transition-all flex items-center gap-1.5 ${
@@ -297,15 +296,11 @@ export const Navbar: React.FC = () => {
             {role !== 'guest' && (
               <button
                 onClick={() => setIsChatDrawerOpen(true)}
-                title="Messages"
+                title="Messages — Coming soon"
                 className="p-2 rounded-xl text-steel hover:text-navy hover:bg-slate-100 transition relative"
               >
                 <MessageSquare className="w-5 h-5" />
-                {unreadMessages.length > 0 && (
-                  <span className="absolute top-1 right-1 w-4 h-4 rounded-full bg-fresh text-white text-[10px] font-bold flex items-center justify-center animate-pulse">
-                    {unreadMessages.length}
-                  </span>
-                )}
+                
               </button>
             )}
 
@@ -445,13 +440,16 @@ export const Navbar: React.FC = () => {
                         </button>
                       )}
                       {role === 'employer' && (
-                        <button
-                          onClick={() => handleNavClick('company-profile')}
+                        <>
+                        <button onClick={() => handleNavClick('membership')} className={`px-3 py-2 rounded-xl text-sm font-semibold ${activeTab === 'membership' ? 'bg-navy text-white' : 'text-steel hover:bg-slate-100'}`}>Membership</button>
+                <button
+                  onClick={() => handleNavClick('company-profile')}
                           className="w-full text-left px-3 py-2 text-xs font-medium text-steel hover:bg-slate-50 rounded-lg flex items-center gap-2"
                         >
                           <ShieldCheck className="w-3.5 h-3.5 text-fresh" />
                           <span>Company Settings</span>
                         </button>
+                        </>
                       )}
                       <button
                         onClick={() => {
@@ -543,8 +541,9 @@ export const Navbar: React.FC = () => {
                 <Briefcase className="w-4 h-4 text-fresh" />
                 <span>Applicants</span>
               </button>
-              <button
-                onClick={() => handleNavClick('company-profile')}
+              <button onClick={() => handleNavClick('membership')} className={`px-3 py-2 rounded-xl text-sm font-semibold ${activeTab === 'membership' ? 'bg-navy text-white' : 'text-steel hover:bg-slate-100'}`}>Membership</button>
+                <button
+                  onClick={() => handleNavClick('company-profile')}
                 className="w-full text-left px-3 py-2.5 rounded-xl font-medium text-sm text-navy hover:bg-slate-50 flex items-center gap-2"
               >
                 <ShieldCheck className="w-4 h-4 text-emerald-600" />

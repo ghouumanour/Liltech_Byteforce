@@ -39,8 +39,8 @@ const MainAppContent: React.FC = () => {
 
       {/* Main Glass Navbar */}
       <Navbar />
-      <div className="bg-white border-b px-4 py-2 text-right"><button className="text-sm font-bold text-navy" onClick={()=>setMembershipOpen(v=>!v)}>{membershipOpen?'Close membership':'Membership'}</button></div>
-      {membershipOpen && <Membership />}
+      {role === 'guest' && <div className="bg-white border-b px-4 py-2 text-right"><button className="text-sm font-bold text-navy" onClick={()=>setMembershipOpen(v=>!v)}>{membershipOpen?'Close membership':'Membership'}</button></div>}
+      {role === 'guest' && membershipOpen && <Membership />}
       {authenticated && <div className="bg-slate-100 border-b border-slate-200 text-center text-xs py-2">Authenticated account. Mission management is in integration preview; transactions are simulated.</div>}
 
       {/* Main Layout Area */}
@@ -79,6 +79,7 @@ const MainAppContent: React.FC = () => {
                 {(activeTab === 'dashboard' || activeTab === 'my-jobs') && <EmployerDashboard />}
                 {activeTab === 'applicants' && <EmployerApplicants />}
                 {activeTab === 'company-profile' && <EmployerCompanyProfile />}
+                {activeTab === 'membership' && <Membership />}
               </>
             )}
 

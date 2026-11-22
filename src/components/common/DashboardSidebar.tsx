@@ -274,6 +274,9 @@ export const DashboardSidebar: React.FC = () => {
                   <span>Company Profile & KYC</span>
                 </div>
               </button>
+              <button onClick={() => setActiveTab('membership')} className={`w-full flex items-center gap-2.5 px-3.5 py-2.5 rounded-xl transition-all ${activeTab === 'membership' ? 'bg-navy text-white' : 'text-slate-600 hover:bg-slate-50'}`}>
+                <Sparkles className="w-4 h-4 text-sunny" /><span>Membership</span>
+              </button>
             </>
           )}
 

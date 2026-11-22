@@ -2,7 +2,7 @@ import React, { useState, useRef, useEffect } from 'react';
 import { useApp } from '../../context/AppContext';
 import { X, Send, Sparkles, User, Building, Clock, CheckCheck } from 'lucide-react';
 
-export const ChatDrawer: React.FC = () => {
+export const LegacyChatDrawer: React.FC = () => {
   const {
     isChatDrawerOpen,
     setIsChatDrawerOpen,
@@ -186,3 +186,13 @@ export const ChatDrawer: React.FC = () => {
     </div>
   );
 };
+export const ChatDrawer: React.FC = () => {
+  const {isChatDrawerOpen,setIsChatDrawerOpen}=useApp();
+  if(!isChatDrawerOpen)return null;
+  return <div className="fixed inset-0 z-50 bg-navy-900/60 flex justify-end" onClick={()=>setIsChatDrawerOpen(false)}>
+    <section role="dialog" aria-modal="true" aria-label="Messages coming soon" className="w-full max-w-md bg-white h-full flex flex-col shadow-float" onClick={e=>e.stopPropagation()}>
+      <header className="p-5 bg-navy text-white flex items-center justify-between"><h2 className="font-bold">Messages</h2><button aria-label="Close messages" onClick={()=>setIsChatDrawerOpen(false)}><X className="w-5 h-5"/></button></header>
+      <div className="flex-1 flex flex-col justify-center items-center text-center p-8 gap-4"><div className="bg-fresh/10 p-5 rounded-3xl"><Clock className="w-10 h-10 text-navy"/></div><span className="text-xs font-bold uppercase tracking-widest text-tunisian">Coming soon</span><h3 className="text-2xl font-black text-navy">Stay connected.</h3><p className="text-slate-500">Direct messaging between students and employers is not available yet.</p><button className="bg-navy text-white rounded-xl px-5 py-3 font-bold" onClick={()=>setIsChatDrawerOpen(false)}>Back to GetBoth</button></div>
+    </section></div>;
+};
+
