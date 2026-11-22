@@ -630,7 +630,7 @@ export const INITIAL_NOTIFICATIONS: Notification[] = [
   {
     id: 'notif-1',
     userId: 'stud-1',
-    title: 'Application Accepted! 🎉',
+    title: 'Application Accepted! ',
     message: 'Pulse Events accepted your application for "Event Assistant - Mediterranean Tech Summit" (48 DT). Your Mission Pass is ready.',
     type: 'hire',
     linkTarget: 'schedule',
@@ -640,7 +640,7 @@ export const INITIAL_NOTIFICATIONS: Notification[] = [
   {
     id: 'notif-2',
     userId: 'stud-1',
-    title: 'Payout Released 💸',
+    title: 'Payout Released ',
     message: '60 DT has been credited to your GetBoth balance for completing the Math & Physics revision session.',
     type: 'payout',
     linkTarget: 'dashboard',
@@ -650,7 +650,7 @@ export const INITIAL_NOTIFICATIONS: Notification[] = [
   {
     id: 'notif-3',
     userId: 'stud-1',
-    title: 'New Mission Matching Your Skills 🎯',
+    title: 'New Mission Matching Your Skills ',
     message: 'Sahara Retail posted "Promotional Assistant - New Fragrance Launch" in Sousse paying 15 DT/hour.',
     type: 'system',
     linkTarget: 'jobs',
@@ -660,7 +660,7 @@ export const INITIAL_NOTIFICATIONS: Notification[] = [
   {
     id: 'notif-4',
     userId: 'emp-1',
-    title: 'New Applicant Received 📄',
+    title: 'New Applicant Received ',
     message: 'Sarah Ben Ali applied for "Event Assistant - Mediterranean Tech Summit".',
     type: 'application',
     linkTarget: 'applicants',

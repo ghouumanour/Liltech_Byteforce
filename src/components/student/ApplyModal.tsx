@@ -70,7 +70,7 @@ export const ApplyModal: React.FC = () => {
               <div className="w-16 h-16 rounded-full bg-emerald-100 text-emerald-600 flex items-center justify-center mx-auto shadow-inner animate-bounce">
                 <CheckCircle className="w-10 h-10" />
               </div>
-              <h3 className="text-2xl font-black text-navy font-display">Application Submitted! 🎉</h3>
+              <h3 className="text-2xl font-black text-navy font-display">Application Submitted! </h3>
               <p className="text-xs sm:text-sm text-slate-600 max-w-sm mx-auto">
                 Your application for <strong>{job.title}</strong> has been delivered to {job.companyName}. You can track its status in My Applications.
               </p>

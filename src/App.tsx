@@ -42,7 +42,7 @@ const MainAppContent: React.FC = () => {
       {role === 'guest' ? (
         // Full width container for Guest / Landing experience
         <div className="flex-1 flex flex-col">
-          <main className="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 pt-4">
+          <main className={activeTab === 'browse' ? "flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 pt-4" : "flex-1 w-full min-w-0"}>
             {activeTab === 'explore' && <LandingPage />}
             {activeTab === 'browse' && <JobDiscovery />}
             {activeTab === 'how-it-works' && <LandingPage />}

@@ -217,3 +217,17 @@
     scroll-behavior: auto !important;
   }
 }
+
+/* Rectangular components and continuous landing-page sections. */
+#root :where(button, input, select, textarea, a, div, section, article, span, img, label, li, nav, header, footer, aside, main, form, table, th, td) { border-radius: 0 !important; }
+.landing-hero { background: #fff; }
+.landing-band { padding-block: clamp(3rem, 7vw, 5.5rem); border-top: 1px solid #e2e8f0; background: #fff; }
+.landing-band:nth-of-type(even) { background: #f5f7fa; }
+.landing-band-4 { background: #F4E9E7 !important; }
+.landing-band-4 > div > div, .landing-band-5 > div > div { background: transparent; border: 0; box-shadow: none; padding: 0; }
+.landing-band-7 { background: #02255E !important; padding-block: clamp(2rem, 5vw, 4rem); }
+.landing-band-7 > div > div { box-shadow: none; }
+.landing-page .card-hover:hover { transform: none; box-shadow: 0 4px 12px rgba(2,37,94,.08); }
+.landing-page .animate-fade-in-up { animation-duration: .4s; }
+.landing-page .animate-scale-in { animation-name: fadeIn; }
+@media (prefers-reduced-motion: reduce) { .landing-page .animate-fade-in-up, .landing-page .animate-scale-in { animation: none; } }

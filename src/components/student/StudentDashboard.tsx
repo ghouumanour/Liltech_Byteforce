@@ -84,7 +84,7 @@ export const StudentDashboard: React.FC = () => {
                 </span>
               </div>
               <h1 className="text-2xl sm:text-3xl font-black tracking-tight mt-1.5 font-display">
-                Hello, {student.fullName.split(' ')[0]}! 👋
+                Hello, {student.fullName.split(' ')[0]}! 
               </h1>
               <p className="text-sm text-slate-300 mt-1 max-w-xl">
                 Ready for your next short-term opportunity? You have <strong className="text-sunny">{jobs.filter(j => j.status === 'open').length} active missions</strong> waiting in your region.
@@ -264,7 +264,7 @@ export const StudentDashboard: React.FC = () => {
                         </span>
                         {job.urgency === 'urgent' && (
                           <span className="px-1.5 py-0.5 rounded bg-tunisian-50 text-tunisian text-[10px] font-bold">
-                            ⚡ Urgent
+ Urgent
                           </span>
                         )}
                       </div>

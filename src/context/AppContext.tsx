@@ -255,7 +255,7 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
     const empNotification: Notification = {
       id: `notif-${Date.now()}`,
       userId: job.employerId,
-      title: 'New Applicant Received! 📄',
+      title: 'New Applicant Received! ',
       message: `${currentStudent.fullName} applied for your mission "${job.title}".`,
       type: 'application',
       linkTarget: 'applicants',
@@ -289,7 +289,7 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
           const studentNotification: Notification = {
             id: `notif-${Date.now()}`,
             userId: app.studentId,
-            title: 'You are Hired! 🎉',
+            title: 'You are Hired! ',
             message: `Congratulations! Your application for "${job?.title || 'Mission'}" has been accepted. Check your mission pass.`,
             type: 'hire',
             linkTarget: 'schedule',
@@ -362,7 +362,7 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
     const payoutNotif: Notification = {
       id: `notif-${Date.now()}`,
       userId: app.studentId,
-      title: 'Payment Credited! 💸',
+      title: 'Payment Credited! ',
       message: `${amount} DT has been successfully transferred to your balance for completing "${job?.title}".`,
       type: 'payout',
       linkTarget: 'dashboard',
@@ -400,7 +400,7 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
     const broadcastNotif: Notification = {
       id: `notif-${Date.now()}`,
       userId: currentStudent.id,
-      title: `New Mission in ${newJob.city}! 🚀`,
+      title: `New Mission in ${newJob.city}! `,
       message: `${newJob.companyName} just posted "${newJob.title}" (${newJob.hourlyRate} DT/hr).`,
       type: 'system',
       linkTarget: 'jobs',
@@ -451,7 +451,7 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
     const msgNotif: Notification = {
       id: `notif-${Date.now()}`,
       userId: recipientId,
-      title: `New Message from ${newMsg.senderName} 💬`,
+      title: `New Message from ${newMsg.senderName} `,
       message: content.length > 50 ? `${content.substring(0, 50)}...` : content,
       type: 'message',
       isRead: false,

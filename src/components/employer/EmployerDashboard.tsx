@@ -262,7 +262,7 @@ export const EmployerDashboard: React.FC = () => {
                       </span>
                       {job.urgency === 'urgent' && (
                         <span className="px-2 py-0.5 rounded-full bg-tunisian-50 text-tunisian text-[10px] font-bold">
-                          ⚡ Urgent
+ Urgent
                         </span>
                       )}
                     </div>

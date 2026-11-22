@@ -71,16 +71,13 @@ export const LandingPage: React.FC = () => {
   const featuredMissions = jobs.slice(0, 3);
 
   return (
-    <div className="space-y-28 pb-24">
+    <div className="landing-page">
       
       {/* ═══════════════════════════════════════════════════════════════
           1. HERO SECTION — Premium composition with floating elements
          ═══════════════════════════════════════════════════════════════ */}
-      <section className="relative pt-8 sm:pt-16 pb-10 overflow-hidden">
+      <section className="landing-hero relative pt-12 sm:pt-20 pb-16 overflow-hidden">
         {/* Ambient gradient orbs */}
-        <div className="absolute top-0 right-1/4 w-[700px] h-[700px] bg-fresh/8 rounded-full blur-[100px] pointer-events-none"></div>
-        <div className="absolute top-1/2 left-0 w-[500px] h-[500px] bg-blush/70 rounded-full blur-[80px] pointer-events-none"></div>
-        <div className="absolute bottom-0 right-0 w-[300px] h-[300px] bg-sunny/5 rounded-full blur-[60px] pointer-events-none"></div>
 
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
           
@@ -92,7 +89,7 @@ export const LandingPage: React.FC = () => {
               {/* Badge */}
               <div className="animate-fade-in-up inline-flex items-center gap-2.5 px-4 py-2 rounded-full bg-blush text-steel border border-blush-300 text-xs font-bold uppercase tracking-wider shadow-xs">
                 <span className="relative flex h-2.5 w-2.5">
-                  <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-tunisian opacity-75"></span>
+                  <span className=" absolute inline-flex h-full w-full rounded-full bg-tunisian opacity-75"></span>
                   <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-tunisian"></span>
                 </span>
                 <span className="font-display">Tunisia's Premier Student Jobs Marketplace</span>
@@ -101,7 +98,7 @@ export const LandingPage: React.FC = () => {
               {/* Main Headline */}
               <h1 className="animate-fade-in-up delay-100 text-4xl sm:text-6xl lg:text-[72px] font-black text-navy tracking-tight leading-[1.04] font-display">
                 Your time. Your skills.{' '}
-                <span className="bg-gradient-to-r from-tunisian via-fresh to-navy bg-clip-text text-transparent block sm:inline">
+                <span className="text-tunisian block sm:inline">
                   Your opportunity.
                 </span>
               </h1>
@@ -123,7 +120,7 @@ export const LandingPage: React.FC = () => {
                     setRole('student');
                     setActiveTab('jobs');
                   }}
-                  className="h-12 sm:h-[52px] px-7 sm:px-8 rounded-2xl bg-navy hover:bg-navy-600 text-white shadow-soft transition-all duration-300 hover:scale-[1.03] hover:shadow-float flex items-center gap-2.5 font-bold text-sm btn-press"
+                  className="h-12 sm:h-[52px] px-7 sm:px-8 rounded-2xl bg-navy hover:bg-navy-600 text-white shadow-soft transition-all duration-300  hover:shadow-float flex items-center gap-2.5 font-bold text-sm btn-press"
                 >
                   <span>Find a Job</span>
                   <ArrowRight className="w-4 h-4 text-sunny" />
@@ -134,7 +131,7 @@ export const LandingPage: React.FC = () => {
                     setRole('employer');
                     setActiveTab('dashboard');
                   }}
-                  className="h-12 sm:h-[52px] px-7 sm:px-8 rounded-2xl bg-white hover:bg-slate-50 text-navy border-2 border-slate-200 shadow-xs transition-all duration-300 hover:scale-[1.03] hover:border-fresh hover:shadow-soft flex items-center gap-2.5 font-bold text-sm btn-press"
+                  className="h-12 sm:h-[52px] px-7 sm:px-8 rounded-2xl bg-white hover:bg-slate-50 text-navy border-2 border-slate-200 shadow-xs transition-all duration-300  hover:border-fresh hover:shadow-soft flex items-center gap-2.5 font-bold text-sm btn-press"
                 >
                   <Briefcase className="w-4 h-4 text-tunisian" />
                   <span>Post a Mission</span>
@@ -167,7 +164,7 @@ export const LandingPage: React.FC = () => {
 
                   <button
                     type="submit"
-                    className="w-full sm:w-auto h-11 px-6 rounded-2xl bg-fresh hover:bg-fresh-600 text-white font-bold text-sm shadow-sm transition-all duration-300 hover:scale-[1.02] flex items-center justify-center gap-1.5 shrink-0 btn-press"
+                    className="w-full sm:w-auto h-11 px-6 rounded-2xl bg-fresh hover:bg-fresh-600 text-white font-bold text-sm shadow-sm transition-all duration-300  flex items-center justify-center gap-1.5 shrink-0 btn-press"
                   >
                     <span>Search</span>
                     <ArrowRight className="w-3.5 h-3.5" />
@@ -184,7 +181,7 @@ export const LandingPage: React.FC = () => {
               <TimeOpportunitySignature />
 
               {/* Floating Badge: Escrow Protected */}
-              <div className="absolute -bottom-6 -left-4 sm:-left-6 p-3.5 rounded-2xl bg-white shadow-float border border-slate-200/80 flex items-center gap-3 animate-float-slow shadow-soft z-20">
+              <div className="absolute -bottom-6 -left-4 sm:-left-6 p-3.5 rounded-2xl bg-white shadow-float border border-slate-200/80 flex items-center gap-3  shadow-soft z-20">
                 <div className="w-10 h-10 rounded-xl bg-emerald-50 text-emerald-600 flex items-center justify-center shrink-0">
                   <ShieldCheck className="w-6 h-6" />
                 </div>
@@ -195,7 +192,7 @@ export const LandingPage: React.FC = () => {
               </div>
 
               {/* Floating Badge: Student Rating */}
-              <div className="absolute -top-6 -right-2 sm:-right-4 p-3 rounded-2xl bg-navy text-white shadow-float border border-navy-700 flex items-center gap-2.5 z-20 animate-float delay-500">
+              <div className="absolute -top-6 -right-2 sm:-right-4 p-3 rounded-2xl bg-navy text-white shadow-float border border-navy-700 flex items-center gap-2.5 z-20  delay-500">
                 <div className="w-8 h-8 rounded-lg bg-tunisian text-white flex items-center justify-center font-bold text-xs">
                   ★ 4.9
                 </div>
@@ -232,7 +229,7 @@ export const LandingPage: React.FC = () => {
       {/* ═══════════════════════════════════════════════════════════════
           2. HOW IT WORKS — 3-step process
          ═══════════════════════════════════════════════════════════════ */}
-      <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <section className="landing-band landing-band-1"><div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="text-center max-w-2xl mx-auto mb-16">
           <span className="text-xs font-extrabold uppercase tracking-widest text-tunisian mb-2 block font-display animate-fade-in-up">
             Streamlined Marketplace
@@ -287,12 +284,12 @@ export const LandingPage: React.FC = () => {
           </div>
 
         </div>
-      </section>
+      </div></section>
 
       {/* ═══════════════════════════════════════════════════════════════
           3. POPULAR JOB CATEGORIES — 8-card grid
          ═══════════════════════════════════════════════════════════════ */}
-      <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <section className="landing-band landing-band-2"><div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="text-center max-w-2xl mx-auto mb-14">
           <span className="text-xs font-extrabold uppercase tracking-widest text-tunisian mb-2 block font-display">
             Explore by Category
@@ -337,12 +334,12 @@ export const LandingPage: React.FC = () => {
             );
           })}
         </div>
-      </section>
+      </div></section>
 
       {/* ═══════════════════════════════════════════════════════════════
           4. FEATURED LIVE OPPORTUNITIES — 3 mission cards
          ═══════════════════════════════════════════════════════════════ */}
-      <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <section className="landing-band landing-band-3"><div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4 mb-12">
           <div>
             <span className="text-xs font-extrabold uppercase tracking-widest text-fresh mb-1.5 block font-display">
@@ -369,7 +366,7 @@ export const LandingPage: React.FC = () => {
             <div
               key={job.id}
               onClick={() => setSelectedJobForDetails(job)}
-              className={`animate-fade-in-up delay-${(i + 1) * 100} p-6 rounded-3xl bg-white border border-slate-200/80 shadow-xs hover:shadow-float hover:-translate-y-1.5 transition-all duration-300 cursor-pointer flex flex-col justify-between group`}
+              className={`animate-fade-in-up delay-${(i + 1) * 100} p-6 rounded-3xl bg-white border border-slate-200/80 shadow-xs hover:shadow-float  transition-all duration-300 cursor-pointer flex flex-col justify-between group`}
             >
               <div>
                 <div className="flex items-center justify-between gap-2 mb-4">
@@ -404,12 +401,12 @@ export const LandingPage: React.FC = () => {
             </div>
           ))}
         </div>
-      </section>
+      </div></section>
 
       {/* ═══════════════════════════════════════════════════════════════
           5. DUAL BENEFITS — Students vs Employers toggle
          ═══════════════════════════════════════════════════════════════ */}
-      <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <section className="landing-band landing-band-4"><div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="p-8 sm:p-14 rounded-4xl bg-blush/40 border border-blush-300">
           
           <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-5 mb-10">
@@ -481,12 +478,12 @@ export const LandingPage: React.FC = () => {
           )}
 
         </div>
-      </section>
+      </div></section>
 
       {/* ═══════════════════════════════════════════════════════════════
           6. ABOUT GETBOTH — Brand story section
          ═══════════════════════════════════════════════════════════════ */}
-      <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <section className="landing-band landing-band-5"><div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="p-8 sm:p-14 rounded-4xl bg-white border border-slate-200/80 shadow-soft">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-16 items-center">
             
@@ -535,12 +532,12 @@ export const LandingPage: React.FC = () => {
 
           </div>
         </div>
-      </section>
+      </div></section>
 
       {/* ═══════════════════════════════════════════════════════════════
           7. VERIFIED TESTIMONIALS — 2 cards
          ═══════════════════════════════════════════════════════════════ */}
-      <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <section className="landing-band landing-band-6"><div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="text-center max-w-2xl mx-auto mb-14">
           <span className="text-xs font-extrabold uppercase tracking-widest text-fresh mb-2 block font-display">
             Community Stories
@@ -605,15 +602,13 @@ export const LandingPage: React.FC = () => {
           </div>
 
         </div>
-      </section>
+      </div></section>
 
       {/* ═══════════════════════════════════════════════════════════════
           8. FINAL CTA BANNER — Premium gradient
          ═══════════════════════════════════════════════════════════════ */}
-      <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="p-10 sm:p-16 rounded-4xl bg-gradient-to-br from-navy via-navy-600 to-steel text-white text-center space-y-6 relative overflow-hidden shadow-float">
-          <div className="absolute top-0 right-0 w-96 h-96 bg-fresh/20 rounded-full blur-[80px] pointer-events-none animate-float-slow"></div>
-          <div className="absolute bottom-0 left-0 w-96 h-96 bg-tunisian/15 rounded-full blur-[80px] pointer-events-none animate-float delay-500"></div>
+      <section className="landing-band landing-band-7"><div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="p-10 sm:p-16 rounded-4xl bg-navy text-white text-center space-y-6 relative overflow-hidden shadow-float">
 
           <div className="relative z-10 max-w-2xl mx-auto space-y-5">
             <span className="text-xs font-bold text-sunny uppercase tracking-widest font-display">
@@ -631,7 +626,7 @@ export const LandingPage: React.FC = () => {
                   setRole('student');
                   setActiveTab('jobs');
                 }}
-                className="h-12 sm:h-[52px] px-8 rounded-2xl bg-fresh hover:bg-fresh-600 text-white font-bold text-sm shadow-md transition-all duration-300 hover:scale-[1.03] btn-press"
+                className="h-12 sm:h-[52px] px-8 rounded-2xl bg-fresh hover:bg-fresh-600 text-white font-bold text-sm shadow-md transition-all duration-300  btn-press"
               >
                 Sign Up as a Student
               </button>
@@ -640,14 +635,14 @@ export const LandingPage: React.FC = () => {
                   setRole('employer');
                   setActiveTab('dashboard');
                 }}
-                className="h-12 sm:h-[52px] px-8 rounded-2xl bg-tunisian hover:bg-tunisian-600 text-white font-bold text-sm shadow-md transition-all duration-300 hover:scale-[1.03] btn-press"
+                className="h-12 sm:h-[52px] px-8 rounded-2xl bg-tunisian hover:bg-tunisian-600 text-white font-bold text-sm shadow-md transition-all duration-300  btn-press"
               >
                 Sign Up as an Employer
               </button>
             </div>
           </div>
         </div>
-      </section>
+      </div></section>
 
     </div>
   );

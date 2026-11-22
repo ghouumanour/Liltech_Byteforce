@@ -107,7 +107,7 @@ export const JobDetailsModal: React.FC = () => {
                 </div>
                 {job.urgency === 'urgent' && (
                   <span className="px-2.5 py-0.5 rounded-full bg-tunisian-50 text-tunisian border border-tunisian-200 text-[10px] font-bold uppercase tracking-wider font-display">
-                    ⚡ Urgent Mission
+ Urgent Mission
                   </span>
                 )}
               </div>

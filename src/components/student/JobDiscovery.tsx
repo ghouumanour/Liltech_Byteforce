@@ -195,8 +195,7 @@ export const JobDiscovery: React.FC = () => {
                   className="w-4 h-4 rounded text-tunisian focus:ring-tunisian"
                 />
                 <span className="flex items-center gap-1.5">
-                  <span className="text-tunisian">⚡</span>
-                  <span>Show Urgent Missions Only</span>
+                                    <span>Show Urgent Missions Only</span>
                 </span>
               </label>
             </div>
@@ -314,7 +313,7 @@ export const JobDiscovery: React.FC = () => {
                   <div>
                     {job.urgency === 'urgent' && (
                       <span className="inline-block px-2 py-0.5 rounded-full bg-tunisian-50 text-tunisian border border-tunisian-200 text-[10px] font-extrabold uppercase tracking-wider mb-1.5">
-                        ⚡ Urgent Mission
+ Urgent Mission
                       </span>
                     )}
                     <h3

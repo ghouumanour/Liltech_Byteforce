@@ -134,7 +134,7 @@ export const PostJobModal: React.FC = () => {
               <div className="w-16 h-16 rounded-full bg-emerald-100 text-emerald-600 flex items-center justify-center mx-auto shadow-inner animate-bounce">
                 <CheckCircle2 className="w-10 h-10" />
               </div>
-              <h3 className="text-2xl font-black text-navy font-display">Mission Published! 🚀</h3>
+              <h3 className="text-2xl font-black text-navy font-display">Mission Published! </h3>
               <p className="text-xs sm:text-sm text-slate-600 max-w-sm mx-auto">
                 Your mission <strong>"{title}"</strong> is now live on GetBoth. Qualified students in {city} will be notified immediately.
               </p>
@@ -190,7 +190,7 @@ export const PostJobModal: React.FC = () => {
                     className="w-full h-11 text-xs px-4 rounded-xl border border-slate-200 bg-white focus:outline-none focus:border-fresh font-semibold cursor-pointer"
                   >
                     <option value="normal">Normal Mission</option>
-                    <option value="urgent">⚡ Urgent Mission (Promoted)</option>
+                    <option value="urgent"> Urgent Mission (Promoted)</option>
                   </select>
                 </div>
               </div>
