@@ -515,7 +515,7 @@ export const LandingPage: React.FC = () => {
             {/* Right — Stats grid */}
             <div className="grid grid-cols-2 gap-4 animate-fade-in-up delay-200">
               {[
-                { icon: Rocket, label: 'Founded', value: '2024', bg: 'bg-fresh-50', iconColor: 'text-fresh' },
+                { icon: Rocket, label: 'Founded', value: '2026', bg: 'bg-fresh-50', iconColor: 'text-fresh' },
                 { icon: Globe, label: 'Active In', value: '10+ Cities', bg: 'bg-tunisian-50', iconColor: 'text-tunisian' },
                 { icon: Heart, label: 'Student Cost', value: 'Zero Fees', bg: 'bg-emerald-50', iconColor: 'text-emerald-600' },
                 { icon: Phone, label: 'Support', value: '24/7', bg: 'bg-sunny-50', iconColor: 'text-sunny-600' },

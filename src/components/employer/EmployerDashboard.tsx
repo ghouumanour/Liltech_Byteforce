@@ -85,7 +85,7 @@ export const EmployerDashboard: React.FC = () => {
               <div className="flex items-center gap-2">
                 <span className="px-2.5 py-0.5 rounded-full bg-emerald-500/20 text-emerald-300 border border-emerald-500/30 text-xs font-bold uppercase tracking-wider flex items-center gap-1 font-display">
                   <ShieldCheck className="w-3.5 h-3.5" />
-                  <span>Verified Employer</span>
+                  <span>{employer.verificationStatus === 'verified' ? 'Verified Employer' : 'Verification pending'}</span>
                 </span>
                 <span className="text-xs text-slate-300 font-medium hidden sm:inline">
                   Matricule: {employer.registrationNumber}

@@ -120,7 +120,7 @@ export const StudentSchedule: React.FC = () => {
 
                 <div className="pt-3 flex items-center justify-between gap-2 border-t border-slate-100">
                   <div className="text-[11px] text-slate-400">
-                    Pass code: <strong className="text-steel font-mono">{app.checkInCode || 'GB-9921'}</strong>
+                    Pass code: <strong className="text-steel font-mono">{app.checkInCode || 'Not assigned yet'}</strong>
                   </div>
 
                   <button
