@@ -29,6 +29,15 @@ import { AdminDashboard } from './components/admin/AdminDashboard';
 const MainAppContent: React.FC = () => {
   const { role, activeTab, demoMode, authenticated } = useApp();
 
+  React.useEffect(() => {
+    if (role !== 'guest') return;
+    if (activeTab === 'how-it-works') {
+      document.getElementById('how-it-works')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    } else if (activeTab === 'explore') {
+      window.scrollTo({ top: 0, behavior: 'auto' });
+    }
+  }, [role, activeTab]);
+
   return (
     <div className="min-h-screen flex flex-col bg-[#FAFBFD] text-slate-800">
       
@@ -44,9 +53,8 @@ const MainAppContent: React.FC = () => {
         // Full width container for Guest / Landing experience
         <div className="flex-1 flex flex-col">
           <main className={activeTab === 'browse' ? "flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 pt-4" : "flex-1 w-full min-w-0"}>
-            {activeTab === 'explore' && <LandingPage />}
+            {(activeTab === 'explore' || activeTab === 'how-it-works') && <LandingPage />}
             {activeTab === 'browse' && <JobDiscovery />}
-            {activeTab === 'how-it-works' && <LandingPage />}
           </main>
           <Footer />
         </div>
