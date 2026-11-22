@@ -105,7 +105,7 @@ export const TimeOpportunitySignature: React.FC<{ compact?: boolean }> = ({ comp
           </div>
 
           <div className="flex items-center justify-between pt-1 text-[11px] border-t border-navy-700/60">
-            <span className="text-slate-300 text-[10px]">Escrow Guaranteed:</span>
+            <span className="text-slate-300 text-[10px]">Example pay:</span>
             <span className="px-2 py-0.5 rounded-md bg-tunisian text-white font-extrabold text-xs">
               48 DT Total
             </span>
@@ -118,10 +118,10 @@ export const TimeOpportunitySignature: React.FC<{ compact?: boolean }> = ({ comp
       <div className="mt-4 pt-3 border-t border-slate-100 flex flex-wrap items-center justify-between gap-2 text-[10px] text-slate-500">
         <span className="flex items-center gap-1 font-medium">
           <ShieldCheck className="w-3.5 h-3.5 text-emerald-600" />
-          <span>Instant Match: <strong>99.2% attendance rate</strong> with digital QR check-in</span>
+          <span>Illustrative match: <strong>compatible availability</strong></span>
         </span>
         <span className="text-steel font-bold">
-          Slogan: <em className="text-navy">"Work flexible. Earn smarter. Grow together."</em>
+          Slogan: <em className="text-navy">"Never choose. Have both."</em>
         </span>
       </div>
     </div>
