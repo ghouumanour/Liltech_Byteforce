@@ -34,7 +34,7 @@ export const StudentProfileView: React.FC = () => {
     dob: student.dob,
     bio: student.bio,
     portfolioUrl: student.portfolioUrl || '',
-    cvUrl: student.cvUrl || 'CV_Sarah_Ben_Ali_2025.pdf'
+    cvUrl: student.cvUrl || ''
   });
 
   const [skills, setSkills] = useState<string[]>(student.skills);
@@ -69,13 +69,14 @@ export const StudentProfileView: React.FC = () => {
     }
   };
 
-  const handleSaveProfile = (e: React.FormEvent) => {
+  const handleSaveProfile = async (e: React.FormEvent) => {
     e.preventDefault();
-    updateStudentProfile({
+    const saved = await updateStudentProfile({
       ...formData,
       skills,
       preferredCategories: preferredCats
     });
+    if(!saved)return;
     setIsSaved(true);
     setTimeout(() => setIsSaved(false), 2500);
   };
@@ -282,7 +283,7 @@ export const StudentProfileView: React.FC = () => {
                 <label className="block text-xs font-bold text-navy mb-1.5">Email Address</label>
                 <input
                   type="email"
-                  value={formData.email}
+                  value={formData.email} readOnly
                   onChange={e => setFormData({ ...formData, email: e.target.value })}
                   className="w-full h-11 text-xs sm:text-sm px-4 rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-fresh/30 focus:border-fresh bg-slate-50/50"
                 />

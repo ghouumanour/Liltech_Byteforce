@@ -31,9 +31,9 @@ export const EmployerCompanyProfile: React.FC = () => {
 
   const [isSaved, setIsSaved] = useState(false);
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    updateEmployerProfile(formData);
+    if(!await updateEmployerProfile(formData))return;
     setIsSaved(true);
     setTimeout(() => setIsSaved(false), 2000);
   };
@@ -90,7 +90,7 @@ export const EmployerCompanyProfile: React.FC = () => {
 
             <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-emerald-50 text-emerald-800 border border-emerald-200 text-xs font-bold font-display">
               <ShieldCheck className="w-4 h-4 text-emerald-600" />
-              <span>Verified Tunisian Enterprise</span>
+              <span>{employer.verificationStatus === 'verified' ? 'Verified Tunisian Enterprise' : 'Verification pending'}</span>
             </div>
 
             <div className="pt-3 border-t border-slate-100 grid grid-cols-2 gap-2 text-xs">
@@ -209,7 +209,7 @@ export const EmployerCompanyProfile: React.FC = () => {
                   <label className="block text-[11px] font-bold text-navy mb-1">Direct Email</label>
                   <input
                     type="email"
-                    value={formData.contactEmail}
+                    value={formData.contactEmail} readOnly
                     onChange={e => setFormData({ ...formData, contactEmail: e.target.value })}
                     className="w-full h-10 text-xs px-3 rounded-xl border border-slate-200 bg-slate-50/50"
                   />

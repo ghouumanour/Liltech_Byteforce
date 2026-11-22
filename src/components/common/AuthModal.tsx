@@ -35,7 +35,10 @@ export const AuthModal: React.FC = () => {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault(); setBusy(true); setError(''); setNotice(null); setResetSent(false);
     try {
-      if (authModalMode === 'forgot') {
+      if (authModalMode === 'reset') {
+        const {error}=await supabase.auth.updateUser({password:formData.password});if(error)throw error;
+        await supabase.auth.signOut();setNotice('Password updated. Sign in with your new password.');setAuthModalMode('login');
+      } else if (authModalMode === 'forgot') {
         const { error } = await supabase.auth.resetPasswordForEmail(formData.email.trim(), { redirectTo: window.location.origin });
         if (error) throw error;
         setResetSent(true);
@@ -77,6 +80,7 @@ export const AuthModal: React.FC = () => {
               {authModalMode === 'login' && 'Welcome Back'}
               {authModalMode === 'signup' && 'Join GetBoth Today'}
               {authModalMode === 'forgot' && 'Reset Password'}
+              {authModalMode === 'reset' && 'Choose a new password'}
             </h3>
             <p className="text-xs text-slate-500 mt-1">
               {authModalMode === 'login' && 'Sign in to access your student jobs & mission dashboard'}
@@ -144,7 +148,8 @@ export const AuthModal: React.FC = () => {
               <div className="relative">
                 <input
                   type="email"
-                  required
+                  required={authModalMode !== 'reset'}
+                  disabled={authModalMode === 'reset'}
                   placeholder={signupRole === 'student' ? 'sarah.benali@insat.ucar.tn' : 'contact@pulse-events.tn'}
                   value={formData.email}
                   onChange={e => setFormData({ ...formData, email: e.target.value })}
@@ -170,7 +175,7 @@ export const AuthModal: React.FC = () => {
                 <div className="relative">
                   <input
                     type="password"
-                    minLength={authModalMode === 'signup' ? 8 : undefined}
+                    minLength={authModalMode === 'signup' || authModalMode === 'reset' ? 8 : undefined}
                     autoComplete={authModalMode === 'signup' ? 'new-password' : 'current-password'}
                     required
                     placeholder="••••••••"
@@ -232,6 +237,7 @@ export const AuthModal: React.FC = () => {
                 {authModalMode === 'login' && 'Sign In to GetBoth'}
                 {authModalMode === 'signup' && `Create ${signupRole === 'student' ? 'Student' : 'Company'} Account`}
                 {authModalMode === 'forgot' && 'Send Reset Instructions'}
+                {authModalMode === 'reset' && 'Update password'}
               </span>
               <ArrowRight className="w-4 h-4 text-sunny" />
             </button>
